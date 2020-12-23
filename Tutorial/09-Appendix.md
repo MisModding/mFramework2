@@ -2,6 +2,8 @@
 ## Appendix
 ----
 
+[Home](/index.md)
+
     TODO: Finish Appendix
 
 
