@@ -31,7 +31,7 @@ ClientOnly(f)
 
 --- register a module with the included custom Loader
 ---| libraries/modules inside pak files are not compatible with require()
----| this allows you to "register" a module placing it in a Known location to be loaded later with require()
+---| this allows you to "register" a module and save it to global cache to load with require()
 ---| module path should be based around the relative path starting in GameSDK
 ---| so a module in "Scripts/mFramework/Modules/MyModule.lua" should be Registered as
 ---| "Scripts.mFramework.Modules.MyModule.lua"
