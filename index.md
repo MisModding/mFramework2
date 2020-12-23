@@ -15,7 +15,7 @@
     - [Modules](Tutorial/08-Modules.md)
         - [Example]
     - [Appendix](Tutorial/09-Appendix.md)
-        - [Included Methods](Tutorial/09-Appendix.md#L11)
+        - [Included Methods](Tutorial/09-Appendix.md#14)
         - [Included Modules]
         - [Included Classes]
 
