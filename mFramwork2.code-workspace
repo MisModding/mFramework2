@@ -1,0 +1,129 @@
+{
+	// Group you Project folders into Workspaces
+	//  uncomment the Documentation Entry if you want a Seperate Documentation Workspace.
+	// you can add as many as you like
+	"folders": [
+		{
+			"name": "Workspace",
+			"path": "./Workspace"
+		},
+		// {
+		// 	"name": "Documentation",
+		// 	"path": "./Documentation"
+		// }
+	],
+	"extensions": {
+		// Extensions Recommended for Best Development Experience
+		"recommendations": [
+			"sumneko.lua",
+			"usernamehw.errorlens",
+			"karyfoundation.comment",
+			"aaron-bond.better-comments",
+			"tomblind.local-lua-debugger-vscode",
+			"Gruntfuggly.todo-tree",
+			"koihik.vscode-lua-format"
+		]
+	},
+	"settings": {
+		// Lua Specific Extension Configuration
+		"vscode-lua-format.configPath": "../lua-format-style.cfg",
+		// ! Current Lua Runtime - CE3 uses 5.1 DONT CHANGE THIS
+		"Lua.runtime.version": "Lua 5.1",
+		"Lua.color.mode": "Semantic",
+		"Lua.completion.callSnippet": "Replace",
+		"Lua.completion.keywordSnippet": "Both",
+		// Path to Included Lua Libraries
+		// you can add multiple sources, full path or relative path to the Current Workspace!
+		"Lua.workspace.library": {
+			"../.lua.compleations.d": true // Path to `.lua.completions.d` for ce3/miscreated IntelliSense Support
+		},
+		"Lua.workspace.ignoreDir": [
+			".vscode", // Performance, Tell sumneko to ignore any `.vscode` folders
+		],
+		// Default Disable Lua Diagnostic Messages ( not needed or to noisy )
+		"Lua.diagnostics.disable": [
+			"lowercase-global"
+		],
+		// Specify some Lua Globals the Exist ingame but not in code (stops "errors" for things that are not defined in your code)
+		"Lua.diagnostics.globals": [
+			"RELIABLE_ORDERED",
+			"PRE_ATTACH",
+			"POST_ATTACH",
+			"NULL_ENTITY",
+			"ENTITYID",
+			"STRING",
+			"g_localActorId",
+			"g_gameRules",
+			"Player",
+			"Net",
+			"CreateItemTable",
+			"BaseBuildingSystem"
+		],
+		// General Extension Configuration
+		"todo-tree.general.tags": [
+			"BUG",
+			"HACK",
+			"FIXME",
+			"CHANGEME",
+			"TODO",
+			"XXX",
+			"INFO",
+			"NOTE"
+		],
+		"todo-tree.regex.regex": "((---|//|#|<!--|;|/\\*|^)\\s*($TAGS)|^\\s*- \\[ \\])", // Needed for to-do tree to recognise lua (---|--|) DONT CHANGE THIS
+		// My Personal Todo Tree Config, Change this how you like
+		"todo-tree.highlights.customHighlight": {
+			"TODO": {
+				"icon": "check",
+				"type": "line",
+			},
+			"FIXME": {
+				"iconColour": "yellow",
+				"gutterIcon": true
+			},
+			"NOTE": {
+				"icon": "questionmark",
+				"iconColour": "blue",
+			}
+		},
+		// My Personal Better Comments Config used Throughout mFramework, Change this however you like
+		"better-comments.tags": [
+			{
+				"tag": "!",
+				"color": "#FF2D00",
+				"strikethrough": false,
+				"backgroundColor": "transparent"
+			},
+			{
+				"tag": "?",
+				"color": "#3498DB",
+				"strikethrough": false,
+				"backgroundColor": "transparent"
+			},
+			{
+				"tag": "//",
+				"color": "#474747",
+				"strikethrough": true,
+				"backgroundColor": "transparent"
+			},
+			{
+				"tag": "todo",
+				"color": "#FF8C00",
+				"strikethrough": false,
+				"backgroundColor": "transparent"
+			},
+			{
+				"tag": ">>",
+				"color": "#aeaeae",
+				"strikethrough": false,
+				"backgroundColor": "transparent"
+			},
+			{
+				"tag": "*",
+				"color": "#98C379",
+				"strikethrough": false,
+				"backgroundColor": "transparent"
+			}
+		],
+	}
+}
