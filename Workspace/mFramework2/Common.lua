@@ -53,7 +53,7 @@ do -- [0-9a-zA-Z]
 end
 
 ---* Cleans Eccess quotes from input string
-function string.clean_quotes(inputString)
+function clean_quotes(inputString)
     local result
     result = inputString:gsub('^"', ''):gsub('"$', '')
     result = result:gsub('^\'', ''):gsub('\'$', '')

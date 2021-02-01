@@ -1,0 +1,3 @@
+[submodule ".lua.compleations.d"]
+	path = .lua.compleations.d
+	url = https://github.com/Therosin/MisLuaApi.git
