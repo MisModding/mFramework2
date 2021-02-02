@@ -1,5 +1,5 @@
 local Events = require('mFramework2.Modules.events')
-Script.LoadScriptFolder(FS.joinPath(mFramework.BASEDIR, 'Systems',
+Script.LoadScriptFolder(FS.joinPath(mFramework2.BASEDIR, 'Systems',
                                     'PluginManager'))
 local Plugin = require('mFramework2.Systems.PluginManager.Plugin')
 

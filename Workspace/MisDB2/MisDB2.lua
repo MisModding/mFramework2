@@ -297,13 +297,16 @@ function MisDB:new(baseDir)
     self.Collections = {}
 end
 
+---@class MisDB2_Collection
+---@field save fun(page:string):boolean `save the collection, or a specified page`
+
 function MisDB:Collection(name)
     if not self.Collections[name] then
         local collectionDir = getPath(self.baseDir, name)
         if not isDir(collectionDir) then mkDir(collectionDir) end
         self.Collections[name] = dbcontroller(getPath(self.baseDir, name))
     end
-    return self.Collections[name]
+    return self.Collections[name] ---@type MisDB2_Collection
 end
 
 --- EXPORTS
@@ -319,5 +322,6 @@ local exports = setmetatable({}, {
         return self, result
     end
 })
--- RegisterModule('mFramework.Modules.MisDB2', exports)
+
+RegisterModule('MisDB2.MisDB', exports)
 return exports

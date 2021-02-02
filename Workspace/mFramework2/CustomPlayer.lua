@@ -1,4 +1,4 @@
-local JSON = require('mFramework.Modules.JSON')
+local JSON = require('mFramework2.Modules.JSON')
 
 local function isInvalidEvent(event)
     if (not event) or (event.type == '' or type(event.type) ~= 'string') then return true end
@@ -18,7 +18,7 @@ CustomPlayer = {
             if assert_arg(1, varName, 'string') then return false, 'invalid varName, must be a string' end
             if assert_arg(2, valueString, 'string') then return false, 'invalid valueString, must be a string' end
             SetCVar(varName, valueString)
-            mFramework.Debug(
+            mFramework2.Debug(
              'CustomPlayer', string.expand('Successfully SetCVar: ${var} newvalue: ${val}', {var = varName, val = valueString})
             )
             return true, 'SetCVarString: Ok'
@@ -27,7 +27,7 @@ CustomPlayer = {
             if assert_arg(1, varName, 'string') then return false, 'invalid varName, must be a string' end
             if assert_arg(2, valueNumber, 'string') then return false, 'invalid valueNumber, must be a number' end
             SetCVar(varName, valueNumber)
-            mFramework.Debug(
+            mFramework2.Debug(
              'CustomPlayer',
              string.expand('Successfully SetCVar: ${var} newvalue: ${val}', {var = varName, val = tostring(valueNumber)})
             )
@@ -41,7 +41,7 @@ CustomPlayer = {
                 if (not target_Id) or (not System.GetEntity(target_Id)) then return false, 'invalid target_id' end
             end
             local event = JSON.parse(event_string)
-            mFramework.Debug(
+            mFramework2.Debug(
              'CustomPlayer', string.expand('Recieved Event: ${name} data: ${data}', {name = event.type, data = event_string})
             )
             if (not event) or isInvalidEvent(event) then return false, 'invalid event' end
@@ -57,7 +57,7 @@ CustomPlayer = {
                 if (not target_Id) or (not System.GetEntity(target_Id)) then return false, 'invalid target_id' end
             end
             local event = JSON.parse(event_string)
-            mFramework.Debug(
+            mFramework2.Debug(
              'CustomPlayer', string.expand('Recieved Event: ${name} data: ${data}', {name = event.type, data = event_string})
             )
             if (not event) or isInvalidEvent(event) then return false, 'invalid event' end
@@ -72,11 +72,11 @@ function CustomPlayer:CustomEventHandler(event, source_Id, target_Id)
     -- Hand over to Registered Handler if it Exists
     if handler then
         if (type(handler['method']) == 'function') then
-            mFramework.Debug('CustomPlayer:Event', string.expand('Run Handler for Event: ${evt}', {evt = event.type}))
+            mFramework2.Debug('CustomPlayer:Event', string.expand('Run Handler for Event: ${evt}', {evt = event.type}))
             return handler.method(self, event, source_Id, target_Id)
         end
     else
-        mFramework.Debug('CustomPlayer:Event', string.expand('UnKnown Event: ${evt}', {evt = event.type}))
+        mFramework2.Debug('CustomPlayer:Event', string.expand('UnKnown Event: ${evt}', {evt = event.type}))
         return
     end
 end

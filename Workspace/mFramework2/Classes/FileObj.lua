@@ -33,5 +33,5 @@ setmetatable(fileObj, {
     end
 })
 
-RegisterModule("mFramework.Classes.Queue",fileObj)
+RegisterModule("mFramework2.Classes.fileObj",fileObj)
 return fileObj

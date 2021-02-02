@@ -1,38 +1,39 @@
+local DataStore = require('mFramework2.Classes.DataStore')
+
 --- Create mFramework Public interface
 local function CreatePublicInterface()
     ---@class mFramework
     --- mFramework Public class
     ---| g_mFramework will be our index
-    mFramework = {}
-    --- mFramework Event Manager
-    mFramework.Events = g_mFramework.Events
-    setmetatable(mFramework, {__index = g_mFramework})
+    mFramework2 = {}
+    g_mFramework.PersistantStorage = DataStore { persistance_dir = 'mFramewor2/PersistantStorage'} ---@type DataStore
+    setmetatable(mFramework2, {__index = g_mFramework})
     return true
 end
 
---- Create mFramework Essential Events
+--- Create mFramework Standard Events
 local function CreateStandardEvents()
-    mFramework.Events:observe('mFramework:OnPreLoaded',
-                              ( -- >> Called after mFramework Core has been fully PreLoaded
+    mFramework2.Events:observe('mFramework2:OnPreLoaded',
+                              ( -- >> Called after mFramework Core has PreLoaded esential classes/modules
     function(event, data, ...)
         --- Output to DebugLog
-        mFramework.Debug(event.type, 'Stage reached...')
+        mFramework2.Debug(event.type, 'Stage reached...')
         return true
     end), true)
 
-    mFramework.Events:observe('mFramework:OnAllLoaded',
-                              ( -- >> Called after mFramework Core has been fully Loaded
+    mFramework2.Events:observe('mFramework2:OnAllLoaded',
+                              ( -- >> Called after mFramework Core has fully Loaded
     function(event, data, ...)
         --- Output to DebugLog
-        mFramework.Debug(event.type, 'Stage reached...')
+        mFramework2.Debug(event.type, 'Stage reached...')
         return true
     end), true)
 
-    mFramework.Events:observe('mFramework:OnShutdown',
-                              ( -- >> Called after mFramework Core has been fully Loaded
+    mFramework2.Events:observe('mFramework2:OnShutdown',
+                              ( -- >> Called after mFramework Core has unLoaded
     function(event, data, ...)
         --- Output to DebugLog
-        mFramework.Debug(event.type, 'Stage reached...')
+        mFramework2.Debug(event.type, 'Stage reached...')
         return true
     end), true)
     return true
@@ -40,7 +41,7 @@ end
 
 --- Create mFramework Standard Interface
 local function CreateStandardInterface()
-    function mFramework:Init(init_time)
+    function mFramework2:Init(init_time)
         -- save init time
         self.state['initialised'] = init_time
         -- setup CustomEntity Support
@@ -52,55 +53,55 @@ local function CreateStandardInterface()
         -- Load Systems
         Script.LoadScriptFolder(FS.joinPath(self.BASEDIR, 'Systems'))
         if System.IsEditor() then ReExposeAllRegistered() end
-        self.Events:emit('mFramework:OnPreLoaded', {initialised = init_time})
-        mFramework.Log('mFramework', 'mFramework Initialised...')
+        self.Events:emit('mFramework2:OnPreLoaded', {initialised = init_time})
+        mFramework2.Log('mFramework', 'mFramework Initialised...')
     end
 
-    function mFramework:Start(start_time)
+    function mFramework2:Start(start_time)
         -- save start time
         self.state['started'] = start_time
         Script.ReloadScript(
             FS.joinPath(self.BASEDIR, 'Scripts', 'OnStartup.lua'))
         ReExposeAllRegistered()
-        self.Events:emit('mFramework:OnAllLoaded', {started = start_time})
-        mFramework.Log('mFramework', 'mFramework Started...')
+        self.Events:emit('mFramework2:OnAllLoaded', {started = start_time})
+        mFramework2.Log('mFramework', 'mFramework Started...')
     end
 
-    function mFramework:Shutdown(shutdown_time)
+    function mFramework2:Shutdown(shutdown_time)
         -- save start time
         self.state['stopped'] = shutdown_time
         Script.ReloadScript(FS.joinPath(self.BASEDIR, 'Scripts',
                                         'OnShutdown.lua'))
-        self.Events:emit('mFramework:OnShutdown', {stopped = shutdown_time})
-        mFramework.Log('mFramework', 'mFramework Stopping...')
+        self.Events:emit('mFramework2:OnShutdown', {stopped = shutdown_time})
+        mFramework2.Log('mFramework', 'mFramework Stopping...')
     end
 
     -- Register Init Callback
     RegisterCallback(_G, 'OnInitPreLoaded', nil,
-                     function() mFramework:Init(os.date()) end)
+                     function() mFramework2:Init(os.date()) end)
 
     -- Register Start Callback
     RegisterCallback(_G, 'OnInitAllLoaded', nil,
-                     function() mFramework:Start(os.date()) end)
+                     function() mFramework2:Start(os.date()) end)
 
     -- Register Shutdown Callback
     RegisterCallback(_G, 'OnShutdown', nil,
-                     function() mFramework:Shutdown(os.date()) end)
+                     function() mFramework2:Shutdown(os.date()) end)
 
     return true
 end
 
 local function init()
     if (not CreatePublicInterface()) then
-        LogError('mFramework:main failed @ stage: CreatePublicInterface()')
+        LogError('mFramework2:main failed @ stage: CreatePublicInterface()')
         return
     end
     if (not CreateStandardEvents()) then
-        LogError('mFramework: init failed @ stage: CreateStandardEvents')
+        LogError('mFramework2: init failed @ stage: CreateStandardEvents')
         return
     end
     if (not CreateStandardInterface()) then
-        LogError('mFramework: init failed @ stage: CreateStandardInterface()')
+        LogError('mFramework2: init failed @ stage: CreateStandardInterface()')
         return
     end
     ---TODO: Improve logging

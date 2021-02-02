@@ -39,7 +39,7 @@ local parseCommand = function(command)
     end
 end
 
----@class ChatCommand
+---@class mChatCommand
 ---@field   cmd         string                                  Command
 ---@field   name        string                                  Command Name
 ---@field   description string                                  Command Description
@@ -80,4 +80,4 @@ function ChatCommand:run(player, command, ...)
     return ok,response
 end
 
-mFramework.ChatCommand = ChatCommand
+mFramework2.ChatCommand = ChatCommand

@@ -54,5 +54,5 @@ end
 
 local exports = setmetatable({}, meta)
 
-RegisterModule("mFramework.Classes.Queue",exports)
+RegisterModule("mFramework2.Classes.Queue",exports)
 return exports

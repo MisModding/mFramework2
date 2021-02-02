@@ -1,4 +1,4 @@
-local configReader = require('mFramework.Modules.configReader')
+local configReader = require('mFramework2.Modules.configReader')
 
 ---@class ConfigFile
 ---@field Options table<string,string|number|boolean>
@@ -23,5 +23,5 @@ function ConfigFile:reload()
     end
 end
 
-RegisterModule('mFramework.Classes.ConfigFile', ConfigFile)
+RegisterModule('mFramework2.Classes.ConfigFile', ConfigFile)
 return ConfigFile

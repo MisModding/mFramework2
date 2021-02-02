@@ -26,7 +26,7 @@ local DataStore = Class {}
 ---@usage
 --      local MyClass = Class {}
 --      function MyClass:new()
---          local configstore = {name = 'ConfigStoreName', persistance_dir = './Some/Folder'}
+--          local configstore = {name = 'ConfigStoreName', persistance_dir = 'dataDir'}
 --          self:implement(g_ServerManagerClass.DataStore)
 --      end
 function DataStore:new(config)
@@ -37,16 +37,16 @@ function DataStore:new(config)
         return nil, 'must specify a name'
     end
     self.DataSource = {
-        Source = MisDB:Create(config.persistance_dir, config.name),
+        Source = MisDB(config.persistance_dir), ---@type MisDB2
     }
-    self.DataSource['Data'] = self.DataSource['Source']:Collection('DataStore')
+    self.DataSource['Data'] = self.DataSource['Source']:Collection(config.name) ---@type MisDB2_Collection
     return self
 end
 ---* Fetches a Value from this DataStore
 ---@param key string ConfigKey
 ---@return number|string|table|boolean ConfigValue
 function DataStore:GetValue(key)
-    local Cache = (self.DataSource['Data']:GetPage('ConfigData') or {})
+    local Cache = (self.DataSource['Data'] or {})
     return Cache[key]
 end
 ---* Saves a Value to this DataStore
@@ -54,15 +54,14 @@ end
 ---@param value number|string|table|boolean Value
 ---@return boolean Successfull
 function DataStore:SetValue(key, value)
-    local Cache = (self.DataSource['Data']:GetPage('ConfigData') or {})
+    local Cache = (self.DataSource['Data'] or {})
     Cache[key] = value
-    local res = self.DataSource['Data']:SetPage('ConfigData', Cache)
-    self.DataSource['Source']:Save()
+    res = self.DataSource.Data:save("Data")
     return res
 end
 --
 -- ─── EXPORTS ────────────────────────────────────────────────────────────────────
 --
-RegisterModule('mFramework.Classes.DataStore',DataStore)
-g_mFramework.classes.DataStore = DataStore
+RegisterModule('mFramework2.Classes.DataStore',DataStore)
+g_mFramework.Classes.DataStore = DataStore
 return DataStore

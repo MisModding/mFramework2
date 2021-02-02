@@ -4,7 +4,7 @@ if not g_mReExposeIndex then g_mReExposeIndex = {} end
 
 function ReExposeAllRegistered()
     for k, v in pairs(g_mReExposeIndex) do
-        mFramework.Log('CustomEntity', 'ReExposing: ' .. tostring(k))
+        mFramework2.Log('CustomEntity', 'ReExposing: ' .. tostring(k))
         _G[k] = mergef(_G[k], v.methods, true)
         ---Expose
         local e = v.expose
@@ -31,7 +31,7 @@ local function RegisterForReExpose(exposeData)
     local cls = mergef(thisEntity, thisEntry, true)
     if cls then
         g_mReExposeIndex[classToExpose] = cls
-        mFramework.Log('CustomEntity', string.format('Class: %s registered for ReExpose.', tostring(classToExpose)))
+        mFramework2.Log('CustomEntity', string.format('Class: %s registered for ReExpose.', tostring(classToExpose)))
         return true, 'Registered'
     end
     return false, "failed to register"
