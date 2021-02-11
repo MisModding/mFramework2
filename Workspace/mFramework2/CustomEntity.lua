@@ -34,7 +34,7 @@ local function RegisterForReExpose(exposeData)
         mFramework2.Log('CustomEntity', string.format('Class: %s registered for ReExpose.', tostring(classToExpose)))
         return true, 'Registered'
     end
-    return false, "failed to register"
+    return false, 'failed to register'
 end
 
 --- mReExpose: Merges new Methods and ReExposes the Provided Class

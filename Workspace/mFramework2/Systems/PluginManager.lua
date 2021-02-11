@@ -1,6 +1,5 @@
 local Events = require('mFramework2.Modules.events')
-Script.LoadScriptFolder(FS.joinPath(mFramework2.BASEDIR, 'Systems',
-                                    'PluginManager'))
+Script.LoadScriptFolder(FS.joinPath(mFramework2.BASEDIR, 'Systems', 'PluginManager'))
 local Plugin = require('mFramework2.Systems.PluginManager.Plugin')
 
 ---@class mPluginManager
@@ -19,15 +18,13 @@ end
 ---@param name string name of plugin to load
 ---@param path string path to the given plugin folder
 ---@return boolean
----@return mPlugin
+---@return mPlugin2
 function plugin_manager:loadPlugin(name, path)
     local result = Plugin(path)
     if (not result) then return false, result end
     if (not result) then return false, 'plugin failed to load: returned nil' end
     local plugin = result.plugin
-    if (plugin.name ~= name) then
-        return false, 'provided plugin name does not match the loaded plugin'
-    end
+    if (plugin.name ~= name) then return false, 'provided plugin name does not match the loaded plugin' end
     table.insert(self['plugins'], result)
     if type(plugin['onLoad']) == 'function' then plugin.onLoad() end
 end
@@ -41,7 +38,7 @@ function plugin_manager:listPlugins()
             plugin_file = (plugin['path'] or 'unKnown'),
             plugin_description = (this['description'] or 'unKnown'),
             plugin_hasLoadMethod = (type(this['onLoad']) == 'function'),
-            plugin_hasUnloadMethod = (type(this['onUnload']) == 'function')
+            plugin_hasUnloadMethod = (type(this['onUnload']) == 'function'),
         }
         plugin_list[this.name] = entry
     end

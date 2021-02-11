@@ -6,31 +6,28 @@ local function CreatePublicInterface()
     --- mFramework Public class
     ---| g_mFramework will be our index
     mFramework2 = {}
-    g_mFramework.PersistantStorage = DataStore { persistance_dir = 'mFramewor2/PersistantStorage'} ---@type DataStore
+    g_mFramework.PersistantStorage = DataStore {persistance_dir = 'mFramewor2/PersistantStorage'} ---@type DataStore
     setmetatable(mFramework2, {__index = g_mFramework})
     return true
 end
 
 --- Create mFramework Standard Events
 local function CreateStandardEvents()
-    mFramework2.Events:observe('mFramework2:OnPreLoaded',
-                              ( -- >> Called after mFramework Core has PreLoaded esential classes/modules
+    mFramework2.Events:observe('mFramework2:OnPreLoaded', ( -- >> Called after mFramework Core PreLoads esential classes/modules
     function(event, data, ...)
         --- Output to DebugLog
         mFramework2.Debug(event.type, 'Stage reached...')
         return true
     end), true)
 
-    mFramework2.Events:observe('mFramework2:OnAllLoaded',
-                              ( -- >> Called after mFramework Core has fully Loaded
+    mFramework2.Events:observe('mFramework2:OnAllLoaded', ( -- >> Called after mFramework Core has fully Loaded
     function(event, data, ...)
         --- Output to DebugLog
         mFramework2.Debug(event.type, 'Stage reached...')
         return true
     end), true)
 
-    mFramework2.Events:observe('mFramework2:OnShutdown',
-                              ( -- >> Called after mFramework Core has unLoaded
+    mFramework2.Events:observe('mFramework2:OnShutdown', ( -- >> Called after mFramework Core has unLoaded
     function(event, data, ...)
         --- Output to DebugLog
         mFramework2.Debug(event.type, 'Stage reached...')
@@ -60,8 +57,7 @@ local function CreateStandardInterface()
     function mFramework2:Start(start_time)
         -- save start time
         self.state['started'] = start_time
-        Script.ReloadScript(
-            FS.joinPath(self.BASEDIR, 'Scripts', 'OnStartup.lua'))
+        Script.ReloadScript(FS.joinPath(self.BASEDIR, 'Scripts', 'OnStartup.lua'))
         ReExposeAllRegistered()
         self.Events:emit('mFramework2:OnAllLoaded', {started = start_time})
         mFramework2.Log('mFramework', 'mFramework Started...')
@@ -70,23 +66,19 @@ local function CreateStandardInterface()
     function mFramework2:Shutdown(shutdown_time)
         -- save start time
         self.state['stopped'] = shutdown_time
-        Script.ReloadScript(FS.joinPath(self.BASEDIR, 'Scripts',
-                                        'OnShutdown.lua'))
+        Script.ReloadScript(FS.joinPath(self.BASEDIR, 'Scripts', 'OnShutdown.lua'))
         self.Events:emit('mFramework2:OnShutdown', {stopped = shutdown_time})
         mFramework2.Log('mFramework', 'mFramework Stopping...')
     end
 
     -- Register Init Callback
-    RegisterCallback(_G, 'OnInitPreLoaded', nil,
-                     function() mFramework2:Init(os.date()) end)
+    RegisterCallback(_G, 'OnInitPreLoaded', nil, function() mFramework2:Init(os.date()) end)
 
     -- Register Start Callback
-    RegisterCallback(_G, 'OnInitAllLoaded', nil,
-                     function() mFramework2:Start(os.date()) end)
+    RegisterCallback(_G, 'OnInitAllLoaded', nil, function() mFramework2:Start(os.date()) end)
 
     -- Register Shutdown Callback
-    RegisterCallback(_G, 'OnShutdown', nil,
-                     function() mFramework2:Shutdown(os.date()) end)
+    RegisterCallback(_G, 'OnShutdown', nil, function() mFramework2:Shutdown(os.date()) end)
 
     return true
 end

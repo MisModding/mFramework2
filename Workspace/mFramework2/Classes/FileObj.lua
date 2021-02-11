@@ -30,8 +30,8 @@ setmetatable(fileObj, {
     __call = function(self, ...)
         self:new()
         return self
-    end
+    end,
 })
 
-RegisterModule("mFramework2.Classes.fileObj",fileObj)
+RegisterModule('mFramework2.Classes.fileObj', fileObj)
 return fileObj

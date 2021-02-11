@@ -2,9 +2,7 @@ DIR_SEPERATOR = _G['package'].config:sub(1, 1)
 
 --- safely escape a given string
 ---@param str string    string to escape
-string.escape = function(str)
-    return str:gsub('([%^%$%(%)%%%.%[%]%*%+%-%?])', '%%%1')
-end
+string.escape = function(str) return str:gsub('([%^%$%(%)%%%.%[%]%*%+%-%?])', '%%%1') end
 
 --- Split a string at a given string as delimeter (defaults to a single space)
 -- | local str = string.split('string | to | split', ' | ') -- split at ` | `
@@ -14,7 +12,7 @@ end
 string.split = function(str, delimiter)
     local result = {}
     local from = 1
-    local delim = delimiter or " "
+    local delim = delimiter or ' '
     local delim_from, delim_to = string.find(str, delim:escape(), from)
     while delim_from do
         table.insert(result, string.sub(str, from, delim_from - 1))
@@ -32,6 +30,35 @@ string.kvargs = function(str)
     local t = {}
     for k, v in string.gmatch(str, '(%w+)=(%w+)') do t[k] = v end
     return t
+end
+
+---* decode a hex encoded string
+---@param str string|string* `the string to decode`
+---@return string `decoded Hex string`
+function string.fromHex(str) return (str:gsub('..', function(cc) return string.char(tonumber(cc, 16)) end)) end
+
+---* encode a string to Hex
+---@param str string|string* `the string to Hex encode`
+---@return string `Hex Encoded String`
+function string.toHex(str) return (str:gsub('.', function(c) return string.format('%02X', string.byte(c)) end)) end
+
+---* Return the Size of a Table.
+-- Works with non Indexed Tables
+--- @param table table  `any table to get the size of`
+--- @return number      `size of the table`
+function table.size(table)
+    local n = 0
+    for k, v in pairs(table) do n = n + 1 end
+    return n
+end
+
+--- Return an array of keys of a table.
+---@param tbl table `The input table.`
+---@return table `The array of keys.`
+function table.keys(tbl)
+    local ks = {}
+    for k, _ in pairs(tbl) do table.insert(ks, k) end
+    return ks
 end
 
 --- expand a string containing any `${var}` or `$var`.
@@ -239,8 +266,7 @@ end
 local function import_symbol(T, k, v, libname)
     local key = rawget(T, k)
     -- warn about collisions!
-    if key and k ~= '_M' and k ~= '_NAME' and k ~= '_PACKAGE' and k ~=
-        '_VERSION' then
+    if key and k ~= '_M' and k ~= '_NAME' and k ~= '_PACKAGE' and k ~= '_VERSION' then
         Log('warning: \'%s.%s\' will not override existing symbol\n', libname, k)
         return
     end
@@ -302,9 +328,7 @@ function Chain(...)
     local function chain(...)
         if not (...) then return Invoker(links, 1)(select(2, ...)) end
         local offset = #links
-        for index = 1, select('#', ...) do
-            links[offset + index] = select(index, ...)
-        end
+        for index = 1, select('#', ...) do links[offset + index] = select(index, ...) end
         return chain
     end
 
@@ -471,8 +495,7 @@ function assert_arg(idx, val, tp)
     if type(val) ~= tp then
         local fn = debug.getinfo(2, 'n')
         local msg = 'Invalid Param in [' .. fn.name .. '()]> ' ..
-                        string.format('Argument:%s Type: %q Expected: %q',
-                                      tostring(idx), type(val), tp)
+                        string.format('Argument:%s Type: %q Expected: %q', tostring(idx), type(val), tp)
         local test = function() error(msg, 4) end
         local rStat, cResult = pcall(test)
         if rStat then
@@ -491,14 +514,11 @@ function PatchVars(vars)
             local currentVal = System.GetCVar(key)
             if (currentVal ~= value) then
                 Log(' - var: ' .. key .. ' Needs Patching')
-                Log(' - Current = ' .. tostring(currentVal) .. ' -- New = ' ..
-                        tostring(value))
+                Log(' - Current = ' .. tostring(currentVal) .. ' -- New = ' .. tostring(value))
                 System.SetCVar(key, value)
             else
                 Log(' - var: ' .. key .. ' OK')
-                Log(
-                    ' - Current = ' .. tostring(currentVal) .. ' -- Expected = ' ..
-                        tostring(value))
+                Log(' - Current = ' .. tostring(currentVal) .. ' -- Expected = ' .. tostring(value))
             end
         end
     end
@@ -521,18 +541,14 @@ end
 ---@param f function
 -- function to run
 -- all Further parameters are passed to the Provided Function call.
-function ServerOnly(f, ...)
-    if System.IsEditor() or CryAction.IsDedicatedServer() then return f(...) end
-end
+function ServerOnly(f, ...) if System.IsEditor() or CryAction.IsDedicatedServer() then return f(...) end end
 
 -- @function ClientOnly
 ---* Function Wrapper Explicitly ensures the Provided Function Only Runs on Client.
 ---@param f function
 -- function to run
 -- all Further parameters are passed to the Provided Function call.
-function ClientOnly(f, ...)
-    if System.IsEditor() or CryAction.IsClient() then return f(...) end
-end
+function ClientOnly(f, ...) if System.IsEditor() or CryAction.IsClient() then return f(...) end end
 
 --- recursive read-only definition
 function readOnly(t)
@@ -554,9 +570,7 @@ function readOnly(t)
         __metatable = 'read only table',
         __index = function(tab, k) return t[k] end,
         __pairs = function() return pairs(t) end,
-        __newindex = function(t, k, v)
-            error('attempt to update a read-only table', 2)
-        end
+        __newindex = function(t, k, v) error('attempt to update a read-only table', 2) end,
     }
     setmetatable(proxy, mt)
     return proxy

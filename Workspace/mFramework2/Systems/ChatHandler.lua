@@ -62,22 +62,18 @@ function ChatCommand:new(cmd)
     return self
 end
 
-function ChatCommand:reply(player,msg)
+function ChatCommand:reply(player, msg)
     if (not player.player) then return end
-    local template = "  Command: ${command} > \n    Response: ${content}"
-    g_gameRules.game:SendTextMessage(0, player._id, string.expand(template,{command = self.name, content = msg}))
+    local template = '  Command: ${command} > \n    Response: ${content}'
+    g_gameRules.game:SendTextMessage(0, player._id, string.expand(template, {command = self.name, content = msg}))
 end
 
 function ChatCommand:run(player, command, ...)
     if (not type(self['method']) == 'function') then return false, 'Command has no method' end
     local cmd = parseCommand(command)
     local ok, response = self:method(cmd, ...)
-    if type(response) == "string" then
-        if type(self["reply"]) == "function" then
-            self:reply(player,response)
-        end
-    end
-    return ok,response
+    if type(response) == 'string' then if type(self['reply']) == 'function' then self:reply(player, response) end end
+    return ok, response
 end
 
 mFramework2.ChatCommand = ChatCommand

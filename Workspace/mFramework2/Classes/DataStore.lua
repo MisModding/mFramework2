@@ -3,7 +3,6 @@
 --   :::::: S V A L T E K   C O N F I G S T O R E   C L A S S : :  :   :    :     :        :          :
 -- ────────────────────────────────────────────────────────────────────────────────────────────────────
 -- vscode-fold=3
-
 -- @classmod DataStore
 --
 -- ─── TYPES ──────────────────────────────────────────────────────────────────────
@@ -24,14 +23,15 @@ local DataStore = Class {}
 -- Create a New DataStore
 ---@param config table Config
 ---@usage
+--      local DataStore = require("mFramework2.Classes.DataStore")
 --      local MyClass = Class {}
 --      function MyClass:new()
---          local configstore = {name = 'ConfigStoreName', persistance_dir = 'dataDir'}
---          self:implement(g_ServerManagerClass.DataStore)
+--          self.DataStore = DataStore {name = 'DataStoreName', persistance_dir = 'dataDir'}
 --      end
 function DataStore:new(config)
-    if assert_arg(1, config, 'table') then return nil end
-    if not config['persistance_dir'] then
+    if assert_arg(1, config, 'table') then
+        return nil, 'you must provide a DataStore config'
+    elseif not config['persistance_dir'] then
         return nil, 'must specify persistance_dir'
     elseif not config['name'] then
         return nil, 'must specify a name'
@@ -56,12 +56,12 @@ end
 function DataStore:SetValue(key, value)
     local Cache = (self.DataSource['Data'] or {})
     Cache[key] = value
-    res = self.DataSource.Data:save("Data")
+    res = self.DataSource.Data:save('Data')
     return res
 end
 --
 -- ─── EXPORTS ────────────────────────────────────────────────────────────────────
 --
-RegisterModule('mFramework2.Classes.DataStore',DataStore)
+RegisterModule('mFramework2.Classes.DataStore', DataStore)
 g_mFramework.Classes.DataStore = DataStore
 return DataStore

@@ -18,32 +18,29 @@ local stderr = io.stderr
 -- (will yield the current coroutine if the task is not completed)
 -- return task return values
 local function task_wait(self)
-  if self.r then return unpack(self.r,1,self.n) end -- already done, return values
+    if self.r then return unpack(self.r, 1, self.n) end -- already done, return values
 
-  local co = coroutine_running()
-  if not co then error("async wait outside a coroutine") end
-  table_insert(self, co)
-  return coroutine_yield(co) -- wait for the task to return
+    local co = coroutine_running()
+    if not co then error('async wait outside a coroutine') end
+    table_insert(self, co)
+    return coroutine_yield(co) -- wait for the task to return
 end
 
 -- return/complete/end task
 -- (multiple calls will do nothing)
 -- ...: return values
 local function task_return(self, ...)
-  if not self.r then
-    self.r, self.n = {...}, select("#", ...)
+    if not self.r then
+        self.r, self.n = {...}, select('#', ...)
 
-    for _, co in ipairs(self) do
-      local ok, err = coroutine_resume(co, ...)
-      if not ok then stderr:write(debug_traceback(co, "async: "..err).."\n") end
+        for _, co in ipairs(self) do
+            local ok, err = coroutine_resume(co, ...)
+            if not ok then stderr:write(debug_traceback(co, 'async: ' .. err) .. '\n') end
+        end
     end
-  end
 end
 
-local meta_task = {
-  __index = {wait = task_wait},
-  __call = task_return
-}
+local meta_task = {__index = {wait = task_wait}, __call = task_return}
 
 -- Luaseq
 
@@ -52,14 +49,14 @@ local meta_task = {
 -- parameters: execute function as coroutine (shortcut)
 --- f: function
 function Luaseq.async(f)
-  if f then
-    local co = coroutine_create(f)
-    local ok, err = coroutine_resume(co)
-    if not ok then stderr:write(debug_traceback(co, "async: "..err).."\n") end
-  else
-    return setmetatable({}, meta_task)
-  end
+    if f then
+        local co = coroutine_create(f)
+        local ok, err = coroutine_resume(co)
+        if not ok then stderr:write(debug_traceback(co, 'async: ' .. err) .. '\n') end
+    else
+        return setmetatable({}, meta_task)
+    end
 end
 
-RegisterModule("mFramework2.Modules.async")
+RegisterModule('mFramework2.Modules.async')
 return Luaseq

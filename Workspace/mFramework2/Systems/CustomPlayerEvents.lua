@@ -18,17 +18,22 @@ function mFramework2.CreatePlayerEvent(eventType, method)
     end
 end
 
+local Sandbox = require('mFramework2.Classes.Sandbox')
+local RMI_Sandbox = Sandbox() ---@type Sandbox
 --- create a player event
-local evt_created, evt_msg = mFramework2.CreatePlayerEvent("runScript",function (player, event, sourceId, targetId)
+local evt_created, evt_msg = mFramework2.CreatePlayerEvent('runScript', function(player, event, sourceId, targetId)
     local scriptToRun = event.data['script']
-    mFramework2.Log("event:runScript","Recieved Event: " .. (scriptToRun or "no data"))
+    mFramework2.Debug('event:runScript', 'Recieved Event: ' .. (scriptToRun or 'no data'))
     if scriptToRun then
-        eval_string(scriptToRun)
+        --- Disallow debug library in RMI calls
+        RMI_Sandbox:Mutate{debug = NULL}
+
+        RMI_Sandbox:runScript(scriptToRun)
     end
 end)
 --- log event creation
 if (not evt_created) then
-mFramework2.Debug("CustomPlayer", string.expand('register Event failed: runScript > ${res}', {res = evt_msg}))
+    mFramework2.Debug('CustomPlayer', string.expand('register Event failed: runScript > ${res}', {res = evt_msg}))
 else
-    mFramework2.Debug("CustomPlayer", string.expand('register Event Ok: runScript > ${res}', {res = evt_msg}))
+    mFramework2.Debug('CustomPlayer', string.expand('register Event Ok: runScript > ${res}', {res = evt_msg}))
 end

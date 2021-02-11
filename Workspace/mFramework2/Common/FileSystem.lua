@@ -79,18 +79,14 @@ function FS.readFile(path)
 end
 
 function FS.joinPath(...)
-	local parts={...}
-	--TODO: might be more useful to handle empty/missing parts
-	if #parts < 2 then
-		error('joinpath requires at least 2 parts',2)
-	end
-	local r=parts[1]
-	for i = 2, #parts do
-		local v = string.gsub(parts[i],'^['..DIR_SEPERATOR..']','')
-		if not string.match(r,'['..DIR_SEPERATOR..']$') then
-			r=r..'/'
-		end
-		r=r..v
-	end
-	return r
+    local parts = {...}
+    -- TODO: might be more useful to handle empty/missing parts
+    if #parts < 2 then error('joinpath requires at least 2 parts', 2) end
+    local r = parts[1]
+    for i = 2, #parts do
+        local v = string.gsub(parts[i], '^[' .. DIR_SEPERATOR .. ']', '')
+        if not string.match(r, '[' .. DIR_SEPERATOR .. ']$') then r = r .. '/' end
+        r = r .. v
+    end
+    return r
 end

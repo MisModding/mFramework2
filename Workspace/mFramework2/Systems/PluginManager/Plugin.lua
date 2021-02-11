@@ -1,17 +1,8 @@
-local luaLoadFile = function(fPath)
-    local file, script
-    if fPath then
-        file = io.open(fPath, 'r')
-        if (not file) or (not file.read) then return false, string.format('failed to read from file: %s', fPath) end
-        script = file:read('*a')
-        file:close()
-        if (not script) then return false, 'no file content' end
-        return (function() return pcall(loadstring, script) end)()
-    end
-    return false, 'no path given'
-end
+local Sandbox = require('mFramework2.Classes.Sandbox')
 
----@class mPlugin
+local PluginSandbox = Sandbox() ---@type Sandbox
+PluginSandbox:Mutate{debug = NULL}
+---@class mPlugin2
 ---@field new fun(self:mPlugin,pluginPath:string):mPlugin|nil,string
 local mPlugin = Class {}
 
@@ -23,11 +14,10 @@ function mPlugin.new(self, pluginPath)
     end
     local pluginFile = FS.joinPath(pluginPath, 'plugin.lua')
     if (not FS.isFile(pluginFile)) then return nil, string.expand('failed to find pluginFile: ${file}', {file = pluginFile}) end
-    local loaded, result = luaLoadFile(pluginFile)
+    local loaded, result = PluginSandbox:runFile(pluginFile)
     if (not loaded) then
-        return false, string.expand(
-                'failed to compile plugin file: ${file} > ${result}', {file = pluginFile, result = tostring(result)}
-               )
+        return false, string.expand('failed to compile plugin file: ${file} > ${result}',
+                                    {file = pluginFile, result = tostring(result)})
     else
         result = result()
         if (not result.name) then return false, 'no plugin name defined' end
@@ -42,5 +32,5 @@ end
 
 function mPlugin:dump() return self['source'] end
 
-RegisterModule("mFramework2.Systems.PluginManager.Plugin",mPlugin)
+RegisterModule('mFramework2.Systems.PluginManager.Plugin', mPlugin)
 return mPlugin

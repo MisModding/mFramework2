@@ -25,9 +25,7 @@ local function init()
             end
             return false, 'failed to update file: ', (self.path or 'invalid path')
         end,
-        purge = function (self)
-            os.remove(self.path)
-        end
+        purge = function(self) os.remove(self.path) end,
     }
 
     local function writer(logtype, source, message)
