@@ -6,10 +6,6 @@
 		{
 			"name": "Workspace",
 			"path": "./Workspace"
-		},
-		{
-			"name": "Documentation",
-		 	"path": "./Documentation"
 		}
 	],
 	"extensions": {
