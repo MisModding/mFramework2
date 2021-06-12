@@ -6,9 +6,8 @@ Usage:
 
   -- Observe the event with a callback.
   -- The callback function will receive an event object
-  -- which will have two parameters:
+  -- which will have the following parameters:
   --   .type -- a string, which is the type of this event.
-  --   .args -- a table with data relative to this event.
   -- There is an optional 3rd argument to observe(), which
   -- if true, will create the event if it does not already
   -- exist.
@@ -21,10 +20,10 @@ Usage:
   Event:observe("join", a_callback)
 
   -- Emit the event!
-  -- The second argument to emit() should be a table
+  -- The second argument to emit(event,data,...) should be a table
   -- of data related to the event. It can be nil, in
-  -- which case the created event object's .args
-  -- property will be set to {}.
+  -- which case when emited, any observing callbacks data
+  -- parameter will be set to {}.
   Event:emit("join", {nick = "foobar", host = "..."},channelId)
 
   -- To no longer observe and event, pass in the callback
@@ -56,7 +55,11 @@ Usage:
 ---@field events table<string,function>
 ---@field callbacks table<string,function>
 ---@field silenced table<string,function>
-local events = {}
+local events = {
+    events = {},
+    callbacks = {},
+    silenced = {}
+}
 
 --- Create an event.
 function events:createEvent(event)
@@ -109,18 +112,16 @@ function events:unobserve(event, callback)
 end
 
 --- Emit an event. Callback functions are passed an
---- event object with .type and .data properties, with
---- .type being set to the type of event, and .data being
---- a provided table of values to be available to all observers.
---- any other args are appended to the calback function call
+--- event object with various properties
+--- event.type containing the name of the event
+--- any other passed args are appended to the callback function call
 function events:emit(event, data, ...)
-    local arg = {n = select('#', ...), ...}
     if self:hasEvent(event) and (not self:isSilenced(event)) then
-        local ev = {type = event, args = (arg or {})}
+        local ev = {type = event}
 
         local result
         for idx, callback in ipairs(self.callbacks[event]) do
-            if type(callback) == 'function' then result = callback(ev, data) end
+            if type(callback) == 'function' then result = callback(ev, data,...) end
         end
         return result or true
     end

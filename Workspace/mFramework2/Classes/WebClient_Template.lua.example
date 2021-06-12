@@ -1,0 +1,69 @@
+--- required modules from SvServerManager
+local WebClient = require('mFramework.WebClient')
+local JSON = require('JSON')
+
+local api = WebClient('http://localhost:3000') -- create a WebClient Instance using the provided url
+
+local authKey = nil -- HTTP Authorization Token from Auth request
+
+-- the UserData request needs to be called from our initial auth request (there are other ways to do this, but its easier to just chain them)
+-- so we need to wrap it in a function.
+local GetUserInfo = function(Key)
+    if type(Key) == 'string' then -- ensure we were passed a valid string though were just asming it is infact a bearer token
+        -- Create our Request Table, only basic sinle values can be used for headers, no slashes or non alphanumeric chars.
+        -- We will use this to pass our Authtoken if we got one from the previous request.
+        -- key 1 '/users' below is the endpoint for this request
+        local AccountReq = {
+            '/users',
+            Headers = {
+                ['Authorization'] = 'Bearer ' .. Key
+            }
+        }
+        -- Make an Async Request to the endpoint.
+        -- param1 is our request data from above, param 2 is a callback fucntion to run on result.
+        api:getAsync(
+            AccountReq,
+            function(result)
+                local response
+                if result ~= nil then
+                    response = JSON.parse(result)
+                end
+
+                if (type(response) == 'table') then
+                    for idx,account in pairs(response) do
+                        for k, v in pairs(account) do
+                            Log('Key: %s Value: %s', tostring(k), tostring(v))
+                        end
+                    end
+                end
+            end
+        )
+    end
+end
+
+-- this is where this script actual starts , the request above should only be called if this one is successfull
+--  the body table below supports and value that can be serialised to json, numbers/strings/booleans/tables/lists
+local AuthReq = {
+    '/auth',
+    Body = {
+        ['email'] = 'user@domain.xyz',
+        ['password'] = 'testPass01'
+    }
+}
+
+api:postAsync(
+    AuthReq,
+    function(result)
+        local auth
+        if result ~= nil then
+            auth = JSON.parse(result)
+        end
+
+        -- here we check we recieved a valid response simply based on if it was able to be parsed from json, and the expected authkey property exists
+        -- if so we now Await on the GetUserInfo request we created before
+        if auth.accessToken then
+            Log(auth.accessToken)
+            return GetUserInfo(auth.accessToken)
+        end
+    end
+)

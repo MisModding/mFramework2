@@ -19,11 +19,11 @@ g_mFramework = {
     --- mFramework BaseDir
     BASEDIR = 'mFramework2/',
     --- mFramework global classes
-    classes = {}, ---@type table<string,any>
+    classes = {}, ---@type table<string,table|function>
     --- mFramework global modules
-    modules = {}, ---@type table<string,table>
+    modules = {}, ---@type table<string,table|function>
     --- mFramework global plugins
-    plugins = {}, ---@type table<string,table>
+    plugins = {}, ---@type table<string,table|function>
     --- mFramework global state
     state = {
         --- mFramework Init Time
@@ -35,28 +35,22 @@ g_mFramework = {
 
 if System.IsEditor() then g_mFramework.LOGLEVEL = 3 end
 
--- > load common files
-Script.ReloadScript(
- g_mFramework.BASEDIR .. 'Common.lua'
-)
-Script.LoadScriptFolder(
- g_mFramework.BASEDIR .. 'Common/'
-)
+-- >> load common files
+Script.ReloadScript(g_mFramework.BASEDIR .. 'Common.lua')
+Script.LoadScriptFolder(g_mFramework.BASEDIR .. 'Common/')
 
-Script.LoadScriptFolder('MisDB2/')
-MisDB = require("MisDB2.MisDB")
+-- >> load MisDB2
+Script.LoadScriptFolder('MisDB/')
+MisDB = require('MisDB')
 
-Script.LoadScriptFolder(
- g_mFramework.BASEDIR .. 'Modules/'
-)
+-- >> reload modules
+Script.LoadScriptFolder(g_mFramework.BASEDIR .. 'Modules/')
 
 --- mFramework Event Manager
-g_mFramework.Events = require("mFramework2.Modules.Events")
+g_mFramework.Events = require('mFramework2.Modules.events')
 
-Script.LoadScriptFolder(
- g_mFramework.BASEDIR .. 'Classes/'
-)
+--- >> reload classes
+Script.LoadScriptFolder(g_mFramework.BASEDIR .. 'Classes/')
 
-Script.ReloadScript(
- g_mFramework.BASEDIR .. 'main.lua'
-)
+-- >> load mFramework/main
+Script.ReloadScript(g_mFramework.BASEDIR .. 'main.lua')

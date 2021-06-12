@@ -44,10 +44,10 @@ local function strip_quotes(s) return s:gsub('[\'"](.*)[\'"]', '%1') end
 local configReader = {}
 
 --- like io.lines(), but allows for lines to be continued with '\'.
--- @param file a file-like object (anything where read() returns the next line) or a filename.
+-- @param file file* file-like object (anything where read() returns the next line) or a filename.
 -- Defaults to stardard input.
--- @return an iterator over the lines, or nil
--- @return error 'not a file-like object' or 'file is nil'
+-- @return function an iterator over the lines, or nil
+-- @return string 'not a file-like object' or 'file is nil'
 function configReader.lines(file)
     local f, openf, err
     local line = ''

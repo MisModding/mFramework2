@@ -122,9 +122,9 @@ local _crc_table3 = {
 	93,42,180,195,90,45}
 
 --- Calculate the CRC-32 checksum of the string.
--- @param str [string] the input string to calculate its CRC-32 checksum.
--- @param init_value [nil/integer] The initial crc32 value. If nil, use 0
--- @return [integer] The CRC-32 checksum, which is greater or equal to 0,
+-- @param str string the input string to calculate its CRC-32 checksum.
+-- @param init_value nil|number The initial crc32 value. If nil, use 0
+-- @return number The CRC-32 checksum, which is greater or equal to 0,
 -- and less than 2^32 (4294967296).
 function Crc32(str, init_value)
 	-- TODO: Check argument

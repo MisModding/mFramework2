@@ -1,29 +1,41 @@
---- Create a empty table for our file Object
-local fileObj
+---@class mFramework2.Classes.fileObj
+---@field content string
+local fileObj = {}
 
 function fileObj:new(file_path) self.path = file_path end
 
 function fileObj:load()
     local file = io.open(self.path, 'a+')
     if file then
-        local result = file:read('*a')
+        self.content = file:read('*a')
         file:close()
-        return result, 'success reading from file'
+        return self.content, 'success reading from file'
     end
     return false, 'failed read file: ', (self.path or 'invalid path')
 end
+
 --- update the ondisk copy
+---@param content any
+---@return boolean
+---@return string
+---@return string
 function fileObj:update(content)
     local file = io.open(self.path, 'a+')
+    --fallback to cached if no data passed
+    if (not content) then content = self.content end
+
     if file then
         file:write(content)
         file:close()
+        self.content = content
         return true, 'updated'
     end
-    return false, 'failed to update file: ', (self.path or 'invalid path')
+    return false, 'failed to update file: '.. (self.path or 'invalid path')
 end
---- allow for deletion of the on disk copy
+
+--- deletion of on disk copy
 function fileObj:purge() os.remove(self.path) end
+
 
 setmetatable(fileObj, {
     --- make this Object Callable

@@ -32,7 +32,7 @@ table.insert(package.loaders, 2, loadLuaMod)
 -- ────────────────────────────────────────────────────────────────────────────────
 
 ---* Registers a Module Table with the Custom Loader
----| returns boolean and a message on error
+--- returns boolean and a message on error
 ---@param name string Module Name
 -- This is the Module Name used to Load the Registered Module, you should follow require standards.
 -- thus a module found in Scripts/MyMod/MyModule.lua should be named "Scripts.MyMod.MyModule"

@@ -31,7 +31,8 @@ local function RegisterForReExpose(exposeData)
     local cls = mergef(thisEntity, thisEntry, true)
     if cls then
         g_mReExposeIndex[classToExpose] = cls
-        mFramework2.Log('CustomEntity', string.format('Class: %s registered for ReExpose.', tostring(classToExpose)))
+        mFramework2.Log('CustomEntity', string.format('Class: %s registered for ReExpose.',
+          tostring(classToExpose)))
         return true, 'Registered'
     end
     return false, 'failed to register'

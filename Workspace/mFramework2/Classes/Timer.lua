@@ -84,5 +84,7 @@ function timer:stats()
     }
 end
 
+timer.use = timer.stats
+
 RegisterModule('mFramework2.Classes.Timer', timer)
 return timer

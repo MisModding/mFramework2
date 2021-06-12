@@ -1,3 +1,4 @@
+
 ---@class mTask
 ---@field   name          string      `Task Name`
 ---@field   status        string      `Task Status [sleeping|waiting|finished|dead]`
@@ -5,7 +6,8 @@
 ---@field   finishTime    number      `Task finish time (seconds since server/game start)`
 ---@field   runCount      number      `Task run Count`
 ---@field   enabled       boolean     `is the Task Enabled`
-local Task = {}
+local Task = Class("mTask",{})
+
 
 --- Create a task.
 ---@param   name    string      `the task name`
@@ -27,17 +29,21 @@ function Task:new(name, fn)
     self.finishTime = nil
     --- Task main method
     self.thread = coroutine.wrap(function(...)
+        local args = table.pack(...)
         local ranOk, compleated, result
         self.startTime = os.clock()
         while (not compleated) and (not self.enabled == false) do
             self.status = 'running'
-            ranOk, compleated, result = pcall(fn, ...)
+            ranOk, compleated, result = pcall(fn,self,unpack(args))
             self.runCount = (self.runCount or 0) + 1
             if ranOk then
                 if (not compleated) then
                     self.status = 'waiting'
                     if result then self.result = result end
-                    coroutine.yield(result)
+                    local arg = table.pack(coroutine.yield(result))
+                    if arg then
+                        args = arg
+                    end
                 else
                     self.status = 'finished'
                     if result then self.result = result end
@@ -97,13 +103,8 @@ function Task:run(...)
     self.thread(...)
 end
 
-local exports = setmetatable(Task, {
-    __call = function(self, ...)
-        self:new(...)
-        return self
-    end,
-}) ---@type mTask
 
-RegisterModule('mFramework2.Classes.Task', exports)
-return exports
+RegisterModule('mFramework2.Classes.Task', Task)
+
+return Task ---@type mTask
 
