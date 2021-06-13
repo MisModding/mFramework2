@@ -1,5 +1,5 @@
 --- required modules from SvServerManager
-local WebClient = require('mFramework.WebClient')
+local WebClient = require('mFramework2.Modules.WebClient')
 local JSON = require('JSON')
 
 local api = WebClient('http://localhost:3000') -- create a WebClient Instance using the provided url

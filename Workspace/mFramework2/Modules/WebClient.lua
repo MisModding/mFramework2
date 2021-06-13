@@ -8,7 +8,7 @@ this module attempts to get around this by using native windows powershell calls
 ]],
 }
 
-local print,setmetatable = print,setmetatable
+local print, setmetatable = print, setmetatable
 
 if setfenv then
     setfenv(1, M) -- for 5.1
@@ -91,22 +91,18 @@ function Format.asJson(val, indent, tables)
             local arrayVals = {}
             for _, arrayVal in ipairs(val) do
                 local valStr = Format.asJson(arrayVal, indent + 1, tables)
-                table.insert(arrayVals,
-                  ('\n' .. tostring(indentStr:rep(indent + 1))) .. tostring(valStr))
+                table.insert(arrayVals, ('\n' .. tostring(indentStr:rep(indent + 1))) .. tostring(valStr))
             end
-            return ((('[' .. tostring(table.concat(arrayVals, ','))) .. '\n') ..
-                     tostring(indentStr:rep(indent))) .. ']'
+            return ((('[' .. tostring(table.concat(arrayVals, ','))) .. '\n') .. tostring(indentStr:rep(indent))) .. ']'
         else
             local kvps = {}
             for k, v in pairs(val) do
                 local valStr = Format.asJson(v, indent + 1, tables)
-                table.insert(kvps,
-                  (((('\n' .. tostring(indentStr:rep(indent + 1))) .. '"') ..
-                    tostring(escape(tostring(k)))) .. '": ') .. tostring(valStr))
+                table.insert(kvps, (((('\n' .. tostring(indentStr:rep(indent + 1))) .. '"') .. tostring(escape(tostring(k)))) ..
+                                 '": ') .. tostring(valStr))
             end
             return ((#kvps > 0) and
-                     (((('{' .. tostring(table.concat(kvps, ','))) .. '\n') ..
-                       tostring(indentStr:rep(indent))) .. '}')) or '{}'
+                       (((('{' .. tostring(table.concat(kvps, ','))) .. '\n') .. tostring(indentStr:rep(indent))) .. '}')) or '{}'
         end
     elseif (valType == 'number') or (valType == 'boolean') then
         return tostring(val)
@@ -116,16 +112,14 @@ function Format.asJson(val, indent, tables)
 end
 function Format.asHashTable(jsonString)
     if not type(jsonString) == 'string' then return end
-    local stage1 = jsonString:gsub('\\"', '"'):gsub('"{', '@{ '):gsub('}"', ' }'):gsub(',', '; ')
-                     :gsub(':', '=')
+    local stage1 = jsonString:gsub('\\"', '"'):gsub('"{', '@{ '):gsub('}"', ' }'):gsub(',', '; '):gsub(':', '=')
     local stage2 = stage1:gsub('@{ "', '@{ '):gsub('" } ', ' } ')
     local result = stage2:gsub('"="', '="'):gsub('; "', '; ')
     return result:gsub('"', '\'')
 end
 
 local string_tformat
-string_tformat =
-  function(s, tmpl) for key, arg in pairs(tmpl) do s = {s = string.gsub(key, arg)} end end
+string_tformat = function(s, tmpl) for key, arg in pairs(tmpl) do s = {s = string.gsub(key, arg)} end end
 local cleanOutput
 cleanOutput = function(str)
     local s = ''
@@ -258,4 +252,6 @@ do
     WebClient = _class_0
 end
 M.client = WebClient
+
+RegisterModule('mFramework2.Modules.WebClient', M)
 return M

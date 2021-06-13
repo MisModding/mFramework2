@@ -67,14 +67,14 @@ string.kvargs = function( str )
 end
 
 ---* decode a hex encoded string
----@param str string|string* `the string to decode`
+---@param str string `the string to decode`
 ---@return string `decoded Hex string`
 function string.fromHex( str )
     return (str:gsub( '..', function( cc ) return string.char( tonumber( cc, 16 ) ) end ))
 end
 
 ---* encode a string to Hex
----@param str string|string* `the string to Hex encode`
+---@param str string `the string to Hex encode`
 ---@return string `Hex Encoded String`
 function string.toHex( str )
     return (str:gsub( '.', function( c ) return string.format( '%02X', string.byte( c ) ) end ))

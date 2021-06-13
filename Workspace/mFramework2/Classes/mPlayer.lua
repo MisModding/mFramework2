@@ -54,7 +54,7 @@ end
 
 
 function Player:new( player )
-    ---@type mFramework.CustomPlayer
+    ---@type player
     ---HACK: accept a entityId in the form of a number (eg in ce3 editor player has entityId:30583)
     if type( player ) == 'number' then player = System.GetEntity( player ) end
     if not (player and player['player']) then return nil end
@@ -65,17 +65,17 @@ function Player:new( player )
     if not Initialised then Init_PlayerData( self.PlayerData, player ) end
     self.meta = self.PlayerData:GetValue( 'playerMeta' )
     Update_PlayerData(self,player)
-    self.player = player ---@type CE3.player
+    self.realPlayer = player ---@type CE3.player
 end
 
 function Player:Location()
-    local location = player:GetPos()
+    local location = self.realPlayer:GetPos()
     self.PlayerData:SetValue( 'location', location )
     return location
 end
 
 function Player:Name()
-    local name = player:GetName()
+    local name = self.realPlayer:GetName()
     self.PlayerData:SetValue( 'playerName', name )
     return name
 end

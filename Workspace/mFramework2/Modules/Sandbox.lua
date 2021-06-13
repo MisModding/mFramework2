@@ -1,5 +1,3 @@
-if not _G['Class'] then require('libs.MisCommon') end
-
 NULL = {nil, nil}
 
 local LuaFuncs = {}
@@ -100,5 +98,5 @@ function Sandbox:runFile(filepath, ...)
     end, function(E) return ErrorLog('[LoadFile] error: %s file: %s', E, filepath) end)
 end
 
-RegisterModule('mFramework2.Classes.Sandbox', Sandbox)
+RegisterModule('mFramework2.Modules.Sandbox', Sandbox)
 return Sandbox
