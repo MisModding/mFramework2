@@ -402,25 +402,30 @@ function LogRipper( f, ... )
     end
 end
 
----@alias UUID string UniqueID
---- Generate a new UUID
---- using an improved randomseed function accouning for lua 5.1 vm limitations
+--- initTime, the returned os.time() saved when this file was first read
+local initTime = os.time()
+
+--- improved randomseed function accouning for lua 5.1 vm limitations
 --- Lua 5.1 has a limitation on the bitsize meaning that when using randomseed
 --- numbers over the limit get truncated or set to 1 , destroying all randomness for the run
 --- uses an assumed Lua 5.1 maximim bitsize of 32.
+---@param seed number optional: number used to preseed the randomseed function (defaults to the value of initTime)
+function better_randomseed( seed )
+    local bitsize = 32
+    seed = math.floor( math.abs( seed or initTime ) )
+    if seed >= (2 ^ bitsize) then
+        -- integer overflow, reduce  it to prevent a bad seed.
+        seed = seed - math.floor( seed / 2 ^ bitsize ) * (2 ^ bitsize)
+    end
+    math.randomseed( seed - 2 ^ (bitsize - 1) )
+    return seed
+end
+
+
+---@alias UUID string UniqueID
+--- Generate a new UUID
 ---@return UUID, string
 function UUID()
-    local bitsize = 32
-    local initTime = os.time()
-    local function better_randomseed( seed )
-        seed = math.floor( math.abs( seed ) )
-        if seed >= (2 ^ bitsize) then
-            -- integer overflow, reduce  it to prevent a bad seed.
-            seed = seed - math.floor( seed / 2 ^ bitsize ) * (2 ^ bitsize)
-        end
-        math.randomseed( seed - 2 ^ (bitsize - 1) )
-        return seed
-    end
     local uuidSeed = better_randomseed( initTime )
     local function UUID( prefix )
         local template = 'xyxxxxxx-xxyx-xxxy-yxxx-xyxxxxxxxxxx'
@@ -604,29 +609,13 @@ parseCommand = function( command )
 end
 
 
-local A1, A2 = 727595, 798405  -- 5^17=D20*A1+A2
-local D20, D40 = 1048576, 1099511627776  -- 2^20, 2^40
-local X1, X2 = 0, 1
-function rand()
-    local U = X2*A2
-    local V = (X1*A2 + X2*A1) % D20
-    V = (V*D20 + U) % D40
-    X1 = math.floor(V/D20)
-    X2 = V - X1*D20
-    return V/D40
-end
-
 local betterRandom = function(...)
- local seed = math.floor(rand()*10) + 1
- print(seed)
- math.randomseed(seed)
- for i=1,3 do
-  math.random(10000, 65000)
- end
- return math.random(...)
+    better_randomseed(os.clock())
+    return math.random(...)
 end
 
 --- ServerOnly: Fetch a random player
+---@param list table<number,player> table of players to choose from eg: `local chosenPlayer = GetRandomPlayer(CryAction.GetPlayerList())`
 function GetRandomPlayer(list)
     math.randomseed(os.time)
     local players = (list or (CryAction.GetPlayerList() or {}))
