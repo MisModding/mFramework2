@@ -6,6 +6,9 @@
 - Tutorial
     - [Introduction](Tutorial/01-Intro.md)
     - [Common Methods](Tutorial/02-Common-Methods.md)
+    - Example Mod:
+        - [Intro](Tutorial/b1-ExampleMod-mod_init.md)
+        - [Main Script](Tutorial/b2-ExampleMod-mod_main.md)
     - [Appendix](Tutorial/a1-Appendix.md)
         - [Classes](Tutorial/a2-Classes.md)
             - [Example]
